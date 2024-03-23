@@ -1,7 +1,14 @@
+
+
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
     console.log('SERVICE worker registered');
 }
+
+console.log(navigator.serviceWorker.controller.state);
+navigator.serviceWorker.getRegistrations().then(reg => console.log(reg));
+console.log('service worker controller');
+console.log(navigator.storage.estimate().then(estimate => console.log(estimate)));
 
 async function airport() {
     const flight_data = fetch('./assets/flight_data.json').then(respone => {
@@ -9,7 +16,7 @@ async function airport() {
     }).then(data => {
         console.log('goths the json resp');
         console.log(data.arrivals);
-        return data.arrivals;
+        return data;
     }).catch(err => console.log('FML: ' + err))
     console.log(flight_data);
     return flight_data;
@@ -24,7 +31,7 @@ async function addFlights() {
 
     let  jsondata = await airport();
     // let flights = Array.from(await jsondata.arrivals);
-    let flights = jsondata;
+    let flights = jsondata.arrivals;
     // console.log(await flights);
     // const templateHTML = '<span id="city">${city}</span>\
     // <span id="status">${status}</span>\
@@ -59,7 +66,7 @@ async function addFlights() {
         flightclone.children.status.textContent = flight.status;
         flightclone.children.time.textContent = flight.time;
         // add flight to the template
-        flightclone.addEventListener('dblclick', () => {
+        flightclone.addEventListener('click', () => {
             selectFlight(index);
         });
         // let clone = flight.content.cloneNode(true);
@@ -81,22 +88,70 @@ async function addFlights() {
         
 
     })
-    // console.log('ADDING FLIGHT: ');
-    // console.log(flights[key]);
+    return jsondata;
 }
+
+async function addFlights2() {
+    console.log('in func');
+    const flightDOM = document.querySelector('#templatecontainer');
+    // const testDOM = document.querySelector('#heading');
+    // console.log('to mod')
+    // console.log(flightDOM);
+
+    let  jsondata = await airport();
+    // let flights = Array.from(await jsondata.arrivals);
+    let flights = jsondata.arrivals;
+    // console.log(await flights);
+    // const templateHTML = '<span id="city">${city}</span>\
+    // <span id="status">${status}</span>\
+    // <span id="time">${time}</span>'
+
+    // flights = Array.from(flights);
+    // flights.forEach((flight) => {
+    //     for (let key of Object.keys(flight)) {
+    //         console.log(key + ':::' +flight[key])
+    //         // add flight to the template
+    //         let clone = flightlist.content.cloneNode(true);
+    //         clone.querySelector('#city').textContent = flight.city;
+    //         clone.querySelector('#status').textContent = flight.status;
+    //         clone.querySelector('#time').textContent = flight.time;
+
+
+    //         document.querySelector('#flighttemplate').appendChild(clone);
+    //         console.log(document.querySelector('#flighttemplate').innerHTML);
+    //     }
+    
+    
+
+    
+    console.log(flights.length)
+    flights.forEach(({origin, time, status}, index) => {
+
+        let flightHTML = ""
+        flightHTML += `<div>
+        <span class="flight-entry" id="city">${origin}</span>
+        <span class="flight-entry" id="status">${status}</span>
+        <span class="flight-entry" id="time">${origin}</span>
+        </div>`
+    });
+    flightDOM.append
+}
+
+
+
 /**
  * @param {number} flight - The index of the flight in the list.
  *                        +2 is added to account for the test flight and for the Heading that is part of the templatecontainer
  *                       This could be a temporary solution to the problem of the heading being counted as a flight, but going to keep it as is.
  */
-function selectFlight(flight) {
+function selectFlight(flightIndex) {
     // flight.style.backgroundColor = 'rgb(0, 153, 255)'
-    flight += 2;
+    flightIndex += 2;
     const flightList = document.querySelector('#templatecontainer');
-    console.log(flight);
+    console.log(flightIndex);
     console.log(flightList.children);
     // flightList.children[flight].className="selectedFlight";
-    flightList.children[flight].classList.toggle('selectedFlight');
+    flightList.children[flightIndex].classList.toggle('selectedFlight');
 }
 
 function modifyDom() {
@@ -117,5 +172,6 @@ self.addEventListener('DOMContentLoaded', async () => {
     // console.log('modifying dom');
     // modifyDom();
     console.log('loaded:');
-    await addFlights();
+    let theseflights = await addFlights();
+    console.log(theseflights);  
 });

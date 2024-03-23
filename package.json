@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "http-server -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "1.0.0-rc.12",
-    "lite-server": "^2.6.1"
+    "http-server": "^14.1.1"
   }
 }
