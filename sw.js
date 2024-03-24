@@ -1,10 +1,10 @@
 const cache_name = 'flight-cache-v1'
 
-window.addEventListener('offline', e => {
+self.window.addEventListener('offline', e => {
     alert('You are offline. Please connect to the internet to view the latest flight data');
 });
 
-window.addEventListener('online', e => {
+self.window.addEventListener('online', e => {
     alert('You are online. You can now view the latest flight data');
 });
 
@@ -50,9 +50,11 @@ self.addEventListener('install', e => {
     console.log('INSTALLING');
     console.log('INSTALLING');
 
-    e.waitUntil(async () => {
+    e.waitUntil(async (event) => {
         // can have any name
         caches.open(cache_name).then(cache => {
+            console.log('caching');
+            console.log(event);
             return cache.addAll(['./', './index.html', './offline.html', './app.js', './style.css', './assets/flight-data.json', './assets/icon128.png']);
         })
     });
