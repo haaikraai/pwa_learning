@@ -5,11 +5,6 @@ if ('serviceWorker' in navigator) {
     console.log('SERVICE worker registered');
 }
 
-console.log(navigator.serviceWorker.controller.state);
-navigator.serviceWorker.getRegistrations().then(reg => console.log(reg));
-console.log('service worker controller');
-console.log(navigator.storage.estimate().then(estimate => console.log(estimate)));
-
 async function airport() {
     const flight_data = fetch('./assets/flight_data.json').then(respone => {
         return respone.json();
