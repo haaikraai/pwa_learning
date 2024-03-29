@@ -1,9 +1,25 @@
+async function registarSW() {
+    console.log('hello')
+    if ('serviceWorker' in navigator) {
+        try {
+            const swReg = await navigator.serviceWorker.register('/sw.js');
 
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-    console.log('SERVICE worker registered');
+            if (swReg.installing) {
+                console.log('Service worker installing phase');
+            } else if (swReg.waiting) {
+                console.log('Service worker waiting phase');
+            } else if (swReg.active) {
+                console.log('Service worker active phase');
+            }
+        } catch (error) {
+            console.log(`Service worker registration failed with ${error}`);
+        }
+    }
 }
+
+registarSW();
+
+let currentFlight;
 
 async function airport() {
     const flight_data = fetch('./assets/flight_data.json').then(respone => {
@@ -24,7 +40,7 @@ async function addFlights() {
     // console.log('to mod')
     // console.log(flightDOM);
 
-    let  jsondata = await airport();
+    let jsondata = await airport();
     // let flights = Array.from(await jsondata.arrivals);
     let flights = jsondata.arrivals;
     // console.log(await flights);
@@ -46,17 +62,17 @@ async function addFlights() {
     //         document.querySelector('#flighttemplate').appendChild(clone);
     //         console.log(document.querySelector('#flighttemplate').innerHTML);
     //     }
-    
-    
 
-    
+
+
+
     console.log(flights.length)
     flights.forEach((flight, index) => {
         let flightclone = document.querySelector('#flighttemplate').cloneNode(true);
-    
+
         console.log('ogging flight')
         console.log(flight);
-        
+
         flightclone.children.city.textContent = flight.origin;
         flightclone.children.status.textContent = flight.status;
         flightclone.children.time.textContent = flight.time;
@@ -66,7 +82,7 @@ async function addFlights() {
         });
         // let clone = flight.content.cloneNode(true);
 
-        
+
 
         // console.log('the clone' + flightclone);
         // console.log(flight.origin);
@@ -80,7 +96,7 @@ async function addFlights() {
         flightDOM.appendChild(flightclone);
         console.log("clone");
         console.log(flightclone);
-        
+
 
     })
     return jsondata;
@@ -93,7 +109,7 @@ async function addFlights2() {
     // console.log('to mod')
     // console.log(flightDOM);
 
-    let  jsondata = await airport();
+    let jsondata = await airport();
     // let flights = Array.from(await jsondata.arrivals);
     let flights = jsondata.arrivals;
     // console.log(await flights);
@@ -115,12 +131,12 @@ async function addFlights2() {
     //         document.querySelector('#flighttemplate').appendChild(clone);
     //         console.log(document.querySelector('#flighttemplate').innerHTML);
     //     }
-    
-    
 
-    
+
+
+
     console.log(flights.length)
-    flights.forEach(({origin, time, status}, index) => {
+    flights.forEach(({ origin, time, status }, index) => {
 
         let flightHTML = ""
         flightHTML += `<div>
@@ -147,6 +163,7 @@ function selectFlight(flightIndex) {
     console.log(flightList.children);
     // flightList.children[flight].className="selectedFlight";
     flightList.children[flightIndex].classList.toggle('selectedFlight');
+    // currentFlight = flightList.
 }
 
 function modifyDom() {
@@ -168,5 +185,5 @@ self.addEventListener('DOMContentLoaded', async () => {
     // modifyDom();
     console.log('loaded:');
     let theseflights = await addFlights();
-    console.log(theseflights);  
+    console.log(theseflights);
 });

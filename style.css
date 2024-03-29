@@ -53,3 +53,10 @@
     cursor: pointer;
 }
 
+button {
+    display: flex;
+    color: red;
+    margin: 0 auto 0 auto;
+    justify-content: center;
+}
+
