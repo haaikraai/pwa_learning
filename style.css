@@ -53,3 +53,19 @@
     cursor: pointer;
 }
 
+.justmid {
+    display: flex;
+    margin: 8px;
+    justify-content: center;
+    
+}
+
+button {
+    background-color: rgb(0, 153, 255);
+    color: white;
+    padding: 10px 20px;
+    margin: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
