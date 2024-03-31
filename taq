@@ -1,0 +1,45 @@
+[33mcommit f1f5df1e1723e0eb718b65e292618655f7db5bde[m[33m ([m[1;36mHEAD -> [m[1;32mtemp-branch[m[33m)[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Fri Mar 29 18:38:28 2024 +0200
+
+    Caching implemented for offline usage
+
+[33mcommit 86ab7594319defeacf466e2ae81dcd9061007454[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Sun Mar 24 20:20:48 2024 +0200
+
+    Removed some redundant error-prone code
+
+[33mcommit 8d14b7fb1f51e5bcd9f73a6a5372c409a3bef080[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Sun Mar 24 20:19:07 2024 +0200
+
+    Manifest starting url corrected
+
+[33mcommit f93c7a7e0cd53b36f11763e241be255ae72a7441[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Sat Mar 23 23:17:01 2024 +0200
+
+    Deleted irrelevant files
+
+[33mcommit 1cfdc02d7ae18578b6d090638ea415f7ff33ab7f[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Sat Mar 23 23:10:03 2024 +0200
+
+    Update manifest.json
+    
+    Fixed starting url for github pages
+
+[33mcommit 2fb05e10539d46b7be00fede98494f829df41a8c[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Sat Mar 23 23:04:12 2024 +0200
+
+    simple pwa for testing purposes
+    
+    Loading it to github pages
+
+[33mcommit 605b5bdd343b860489f054e4cd0fa0e8ab5b169b[m
+Author: Andre Johnson <haaikraai@gmail.com>
+Date:   Tue Mar 5 12:29:37 2024 +0200
+
+    for github

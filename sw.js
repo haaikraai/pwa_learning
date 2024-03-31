@@ -1,9 +1,14 @@
-const cache_name = 'flight-cache-v1.0.3'
-console.log('In service worker with cache name: ' + cache_name);
+console.log('in sw indeed');
+
+const cache_name = 'flight-cache-v1.3';
+const offlineResources = [
+    'offline.html',
+    'style.css',
+    'app.js'];
 
 self.addEventListener('offline', e => {
     alert('You are offline. Please connect to the internet to view the latest flight data');
-});
+});:
 
 self.addEventListener('online', e => {
     alert('You are online. You can now view the latest flight data');
@@ -15,49 +20,38 @@ self.addEventListener('offline', e => {
 })
 
 self.addEventListener('activate', e => {
+    console.log('Activating service worker in sw.js');
     // Perform any necessary cleanup steps for the previous service worker
-    console.log('Activating service worker: ' + e.target);
-    e.waitUntil(
-        caches.keys().then((cacheNames) => {
-            console.log('Found stored caches: ' + cacheNames);
-            cacheNames.forEach((cacheName) => {
-                console.log('Found stored cache: ' + cacheName);
-                // Todo: delete old caches
-            })
-        })
-    )
 });
 
-if (!self.navigator.onLine) {
-    self.location.href = './offline.html';
-}
-
 self.addEventListener('fetch', async (e) => {
-    console.log('Fetching resource: ' + e.request.url);
+    console.log('Fetching resource');
     // Intercept and handle fetch requests
-    if (navigator.onLine == 'true') {
+    // Online/offline check does not seem to work. Never true
+    if (self.navigator.onLine == true) {
+        console.log('Online, fetching from network');
         e.respondWith(
             fetch(e.request).then(response => {
                 caches.open(cache_name).then(cache => {
-                    console.log('Service worker handling fetch event: ' + e.request.url);
                     if (response.status === 200 && cache.match(e.request) === undefined) {
-                        console.log('Caching new resource: ' + e);
-                        cache.put(e)
+                        console.log('Found a cached match: ' + e.request.url);
+                        cache.put(e);
                     }
                 })
                 return response;
             }).catch(err => {
-                console.log('Error fetching resource');
+                console.log('Error fetching resource: ', err);
+
             })
         );
     }
-    if (navigator.onLine == 'false') {
-        const cachedResponse = await caches.match('./offline.html')
+    if (self.navigator.onLine == false) {
+        console.log('Offline, going to page');
+        const cachedResponse = await caches.match('/offline.html')
+
         e.respondWith(cachedResponse);
     }
 });
-
-
 
 self.addEventListener('install', e => {
     console.log('installing service worker');
@@ -65,18 +59,16 @@ self.addEventListener('install', e => {
     console.log('INSTALLING');
     console.log('INSTALLING');
     console.log('INSTALLING');
-    console.log(e.target);
+    console.log('INSTALLING');
     console.log('INSTALLING');
 
-
-    e.waitUntil(
-        caches.open(cache_name).then(cache => {
-            console.log('caching: ' + cache.keys());
-            console.log('inside install waitUntil');
-
-            return cache.addAll(['./', './index.html', './offline.html', './app.js', './style.css', './assets/flight-data.json', './assets/icon512.png']);
-        }).catch(err => {
-            console.log('Error caching files: ' + err);
-        })
-    );
-})
+    e.waitUntil((async () => {
+        try{
+        const cache = await caches.open(cache_name)
+        console.log('adding resources');
+        await cache.addAll(offlineResources);
+    } catch (err) {
+        console.log('Error caching resources: ', err);
+    }
+    })());
+});
