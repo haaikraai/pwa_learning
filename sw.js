@@ -8,7 +8,7 @@ const offlineResources = [
 
 self.addEventListener('offline', e => {
     alert('You are offline. Please connect to the internet to view the latest flight data');
-});:
+});
 
 self.addEventListener('online', e => {
     alert('You are online. You can now view the latest flight data');
