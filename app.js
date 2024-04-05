@@ -2,7 +2,7 @@ async function registarSW() {
     console.log('hello')
     if ('serviceWorker' in navigator) {
         try {
-            const swReg = await navigator.serviceWorker.register('/sw.js');
+            const swReg = await navigator.serviceWorker.register('sw.js');
 
             if (swReg.installing) {
                 console.log('Service worker installing phase');
