@@ -20,7 +20,7 @@ self.addEventListener('activate', e => {
           console.log('Found key: ' + key);
           if (key !== cache_name) {
             console.log('Found old key, will delete later: ' + key);
-            // caches.delete(key);
+            caches.delete(key);
           }
         });
       })
