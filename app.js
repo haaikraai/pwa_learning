@@ -186,4 +186,9 @@ self.addEventListener('DOMContentLoaded', async () => {
     console.log('loaded:');
     let theseflights = await addFlights();
     console.log(theseflights);
+    setTimeout(() => {
+        console.log('Tick tock 1 minute of time passed. Lets try something.');
+        const today = new Date().toUTCString();
+        // window.localStorage.setItem('StorageTest', `This is just a string to test the storage.\nToday is the date:\n${today}\n\nWell, that's it`);
+    }, 60000)
 });
