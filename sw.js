@@ -1,10 +1,12 @@
 console.log('in sw indeed');
 
-const cache_name = 'flight-cache-v1.3';
+const cache_name = 'flight-cache-v1.4';
 const offlineResources = [
+    'index.html',
     'offline.html',
     'style.css',
-    'app.js'];
+    'app.js',
+    '/assets'];
 
 self.addEventListener('offline', e => {
     alert('You are offline. Please connect to the internet to view the latest flight data');
@@ -22,19 +24,30 @@ self.addEventListener('offline', e => {
 self.addEventListener('activate', e => {
     console.log('Activating service worker in sw.js');
     // Perform any necessary cleanup steps for the previous service worker
+    e.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (cacheName !== cache_name) {
+                        console.log('Deleting ol cache: ' + cacheName);
+                        return caches.delete(cacheName);
+                    }
+                }))
+            self.clients.claim();
+        })
+    )
 });
 
-self.addEventListener('fetch', async (e) => {
-    console.log('Fetching resource');
+self.addEventListener('fetch', (e) => {
     // Intercept and handle fetch requests
     // Online/offline check does not seem to work. Never true
     if (self.navigator.onLine == true) {
-        console.log('Online, fetching from network');
+        console.log('Online, fetching cache first');
         e.respondWith(
             fetch(e.request).then(response => {
                 caches.open(cache_name).then(cache => {
                     if (response.status === 200 && cache.match(e.request) === undefined) {
-                        console.log('Found a cached match: ' + e.request.url);
+                        console.log('Found no cached match: ' + e.request.url);
                         cache.put(e);
                     }
                 })
@@ -47,9 +60,11 @@ self.addEventListener('fetch', async (e) => {
     }
     if (self.navigator.onLine == false) {
         console.log('Offline, going to page');
-        const cachedResponse = await caches.match('/offline.html')
-
-        e.respondWith(cachedResponse);
+        caches.match('/offline.html')
+            .then((cacheResponse) => {
+                console.log('returning final.html from cache');
+                e.respondWith(cacheResponse);
+            })
     }
 });
 
@@ -63,12 +78,12 @@ self.addEventListener('install', e => {
     console.log('INSTALLING');
 
     e.waitUntil((async () => {
-        try{
-        const cache = await caches.open(cache_name)
-        console.log('adding resources');
-        await cache.addAll(offlineResources);
-    } catch (err) {
-        console.log('Error caching resources: ', err);
-    }
+        try {
+            const cache = await caches.open(cache_name)
+            console.log('adding resources');
+            await cache.addAll(offlineResources);
+        } catch (err) {
+            console.log('Error caching resources: ', err);
+        }
     })());
 });

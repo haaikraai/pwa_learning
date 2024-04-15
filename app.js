@@ -1,20 +1,26 @@
 async function registarSW() {
-    console.log('hello')
-    if ('serviceWorker' in navigator) {
+    console.log('hellos')
+    // if ('serviceWorker' in navigator) {
         try {
+            console.log('I am trying ');
             const swReg = await navigator.serviceWorker.register('/sw.js');
-
+            await swReg.showNotification('Service worker registered', { body: 'Service worker registered' });
             if (swReg.installing) {
                 console.log('Service worker installing phase');
             } else if (swReg.waiting) {
                 console.log('Service worker waiting phase');
             } else if (swReg.active) {
                 console.log('Service worker active phase');
+            } else {
+                console.log('Service worker registration failed');
             }
         } catch (error) {
             console.log(`Service worker registration failed with ${error}`);
         }
-    }
+    // } else {
+    //     console.log('Service worker not hnn supported');
+    
+    // }
 }
 
 registarSW();
@@ -22,7 +28,7 @@ registarSW();
 let currentFlight;
 
 async function airport() {
-    const flight_data = fetch('./assets/flight_data.json').then(respone => {
+    const flight_data = fetch('/assets/flight_data.json').then(respone => {
         return respone.json();
     }).then(data => {
         console.log('goths the json resp');
@@ -180,10 +186,19 @@ function modifyDom() {
     tit.innerHTML = 'SAILING';
 }
 
-self.addEventListener('DOMContentLoaded', async () => {
+function savedTime(startTime) {
+    setInterval((startTime) => {
+        startTime += 10000;
+        console.log('10 seconds happened. Save it or so');
+    }, 10000)    ;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     // console.log('modifying dom');
     // modifyDom();
+    const savedTime = 0;
     console.log('loaded:');
+    startTimer(savedTime);
     let theseflights = await addFlights();
     console.log(theseflights);
 });
