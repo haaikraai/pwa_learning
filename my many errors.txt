@@ -1,0 +1,41 @@
+In your 'fetch' event listener, there are a few issues that need to be addressed:
+
+self.navigator.onLine is not a function, it's a property. So, it should be used without parentheses.
+
+The e.respondWith() method is used incorrectly. It should be outside the if conditions because it needs to be called for every fetch event, not just when the user is online or offline.
+
+In the 'online' condition, you're trying to cache the response of the fetch request. However, cache.match(e.request) === undefined is not a correct way to check if a request is in the cache. You should use cache.match(e.request).then(...) instead.
+
+In the 'offline' condition, you're trying to respond with the offline page. H owever, e.respondWith(response) is used incorrectly. It should be return response instead.
+
+Here's a corrected version of your 'fetch' event listener:
+
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request)
+      .then(cachedResponse => {
+        if (cachedResponse) {
+          // If the request is in the cache, return the cached response
+          return cachedResponse;
+        }
+
+        // If the request is not in the cache and the user is online, fetch the request and cache the response
+        if (navigator.onLine) {
+          return fetch(e.request)
+            .then(response => {
+              if (response.status === 200) {
+                return caches.open(cache_name)
+                  .then(cache => {
+                    cache.put(e.request, response.clone());
+                    return response;
+                  });
+              }
+              return response;
+            });
+        }
+
+        // If the user is offline, return the offline page
+        return caches.match('/offline.html');
+      })
+  );
+});

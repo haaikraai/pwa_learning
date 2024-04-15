@@ -186,12 +186,8 @@ function modifyDom() {
     tit.innerHTML = 'SAILING';
 }
 
-function savedTime(startTime) {
-    setInterval((startTime) => {
-        startTime += 10000;
-        console.log('10 seconds happened. Save it or so');
-    }, 10000)    ;
-}
+
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     // console.log('modifying dom');
@@ -201,4 +197,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     startTimer(savedTime);
     let theseflights = await addFlights();
     console.log(theseflights);
+    setTimeout(() => {
+        console.log('Tick tock 1 minute of time passed. Lets try something.');
+        const today = new Date().toUTCString();
+        // window.localStorage.setItem('StorageTest', `This is just a string to test the storage.\nToday is the date:\n${today}\n\nWell, that's it`);
+    }, 60000)
 });
